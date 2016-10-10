@@ -6,31 +6,19 @@
 
 from machine import uart
 
-CMD_SIZE = 512
-LEADING_FRAME = 0xA5
-FRAME_E0 = 0xCC
-FRAME_E1 = 0x33
-FRAME_E2 = 0xC3
-FRAME_E3 = 0x3C
+LEADING_FRAME = b'\xa5'
+TRAILING_FRAME = b'\xcc\x33\xc3\x3c'
 
-# colors
-WHITE = 0x03
-GRAY = 0x02
-DARK_GRAY = 0x01
-BLACK = 0x00
+# colours
+WHITE		= 0x03
+GRAY 		= 0x02
+DARK_GRAY 	= 0x01
+BLACK 		= 0x00
 
 # commands
-CMD_HANDSHAKE = 0x00
-_cmd_handshake  = b"\xa5\x00\x09\x00\xcc\x33\xc3\x3c\xac"
 CMD_SET_BAUD = 0x01
-CMD_READ_BAUD = 0x02
 CMD_MEMORYMODE = 0x07
-CMD_STOPMODE = 0x08
-CMD_UPDATE = 0x0A
-_cmd_update     = b"\xa5\x00\x09\x0a\xcc\x33\xc3\x3c\xa6"
 CMD_SCREEN_ROTATION = 0x0D
-CMD_LOAD_FONT = 0x0E
-CMD_LOAD_PIC = 0x0F
 CMD_SET_COLOR = 0x10
 CMD_SET_EN_FONT = 0x1E
 CMD_SET_CH_FONT = 0x1F
@@ -41,8 +29,6 @@ CMD_DRAW_CIRCLE = 0x26
 CMD_FILL_CIRCLE = 0x27
 CMD_DRAW_TRIANGLE = 0x28
 CMD_FILL_TRIANGLE = 0x29
-CMD_CLEAR = 0x2E
-_cmd_clear      = b"\xa5\x00\x09\x2e\xcc\x33\xc3\x3c\x82"
 CMD_DRAW_STRING = 0x30
 CMD_DRAW_BITMAP = 0x70
 
@@ -63,24 +49,21 @@ EPD_NORMAL = 0
 EPD_INVERSION = 1
 
 # commands
-_cmd_read_baud[8]	= {0xA5, 0x00, 0x09, CMD_READ_BAUD, 0xCC, 0x33, 0xC3, 0x3C};
-_cmd_stopmode[8]	= {0xA5, 0x00, 0x09, CMD_STOPMODE, 0xCC, 0x33, 0xC3, 0x3C};
-_cmd_update[8]		= {0xA5, 0x00, 0x09, CMD_UPDATE, 0xCC, 0x33, 0xC3, 0x3C};
-_cmd_load_font[8]	= {0xA5, 0x00, 0x09, CMD_LOAD_FONT, 0xCC, 0x33, 0xC3, 0x3C};
-_cmd_load_pic[8]	= {0xA5, 0x00, 0x09, CMD_LOAD_PIC, 0xCC, 0x33, 0xC3, 0x3C};
-
-_cmd_buff[CMD_SIZE]
+_cmd_handshake  = b"\xa5\x00\x09\x00\xcc\x33\xc3\x3c\xac"
+_cmd_read_baud	= b"\xa5\x00\x09\x02\xcc\x33\xc3\x3c+parity"
+_cmd_update     = b"\xa5\x00\x09\x0a\xcc\x33\xc3\x3c\xa6"
+_cmd_clear      = b"\xa5\x00\x09\x2e\xcc\x33\xc3\x3c\x82"
+_cmd_stopmode	= b"\xa5\x00\x09\x08\xcc\x33\xc3\x3c+parity"
+_cmd_load_font	= b"\xa5\x00\x09\x0e\xcc\x33\xc3\x3c+parity"
+_cmd_load_pic	= b"\xa5\x00\x09\x0f\xcc\x33\xc3\x3c+parity"
 
 # pins
 wake_up = 2
 reset = 3
 
 # write to display
-static void writeDisplay( unsigned char * ptr, n)
-	int i, x
-	for(i = 0; i < n; i++)
-		x = ptr[i]
-		Serial.write(x)
+def send(cmd):
+	uart.write(cmd)
 
 def eink_init(self, void):
 	Serial.begin(115200)
@@ -103,12 +86,8 @@ def eink_wakeup(self, void):
 	digitalWrite(wake_up, LOW)
 	delay(10)
 
-
-def eink_handshake(self, void):
-	memcpy(_cmd_buff, _cmd_handshake, 8)
-	_cmd_buff[8] = _verify(_cmd_buff, 8)
-
-	writeDisplay(_cmd_buff, 9)
+def eink_handshake():
+	send(_cmd_handshake)
 
 def eink_set_baud(self, baud):
 	_cmd_buff[0] = LEADING_FRAME
@@ -128,10 +107,8 @@ def eink_set_baud(self, baud):
 	delay(10)
 	Serial.begin(baud)
 
-def eink_read_baud(self, void):
-	memcpy(_cmd_buff, _cmd_read_baud, 8)
-	_cmd_buff[8] = _verify(_cmd_buff, 8)
-	writeDisplay(_cmd_buff, 9)
+def eink_read_baud():
+	send(_cmd_read_baud)
 
 def eink_set_memory(self, char mode):
 	_cmd_buff[0] = LEADING_FRAME
@@ -146,15 +123,11 @@ def eink_set_memory(self, char mode):
 	_cmd_buff[9] = _verify(_cmd_buff, 9)
 	writeDisplay(_cmd_buff, 10)
 
-def eink_enter_stopmode(self, void):
-	memcpy(_cmd_buff, _cmd_stopmode, 8)
-	_cmd_buff[8] = _verify(_cmd_buff, 8)
-	writeDisplay(_cmd_buff, 9)
+def eink_enter_stopmode():
+	send(_cmd_stopmode)
 
-def eink_udpate(self, void):
-	memcpy(_cmd_buff, _cmd_update, 8)
-	_cmd_buff[8] = _verify(_cmd_buff, 8)
-	writeDisplay(_cmd_buff, 9)
+def eink_update():
+	send(_cmd_update)
 
 def eink_screen_rotation(self, char mode):
 	_cmd_buff[0] = LEADING_FRAME
@@ -169,17 +142,11 @@ def eink_screen_rotation(self, char mode):
 	_cmd_buff[9] = _verify(_cmd_buff, 9)
 	writeDisplay(_cmd_buff, 10)
 
-def eink_load_font(self, void):
-	memcpy(_cmd_buff, _cmd_load_font, 8)
-	_cmd_buff[8] = _verify(_cmd_buff, 8)
+def eink_load_font():
+	send(_cmd_load_font)
 
-	writeDisplay(_cmd_buff, 9)
-
-def eink_load_pic(self, void):
-	memcpy(_cmd_buff, _cmd_load_pic, 8)
-	_cmd_buff[8] = _verify(_cmd_buff, 8)
-
-	writeDisplay(_cmd_buff, 9)
+def eink_load_pic():
+	send(_cmd_load_pic)
 
 def eink_set_color(self, char color, char bkcolor):
 	_cmd_buff[0] = LEADING_FRAME
@@ -413,22 +380,12 @@ def eink_fill_triangle(self, x0, y0, x1, y1, x2, y2):
 
 	writeDisplay(_cmd_buff, 21)
 
-def eink_clear(self, void):
-	_cmd_buff[0] = LEADING_FRAME
-	_cmd_buff[1] = 0x00
-	_cmd_buff[2] = 0x09
-	_cmd_buff[3] = CMD_CLEAR
-	_cmd_buff[4] = FRAME_E0
-	_cmd_buff[5] = FRAME_E1
-	_cmd_buff[6] = FRAME_E2
-	_cmd_buff[7] = FRAME_E3
-	_cmd_buff[8] = _verify(_cmd_buff, 8)
-	writeDisplay(_cmd_buff, 9)
-
+def eink_clear()
+	send(_cmd_clear)
+	send(_cmd_update)
 
 def eink_disp_char(self, char ch, x0, y0):
 	unsigned char buff[2]
-
 	buff[0] = ch
 	buff[1] = 0
 
