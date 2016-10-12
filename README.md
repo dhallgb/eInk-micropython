@@ -1,7 +1,7 @@
 
 # MicroPython e-Ink library for Waveshare 4.3inch display.
 
-This is a simple library for displaying information on a Waveshare 4.3 e-ink display from a device running Micropython. These are boards like the Pyboard, WiPy, or those based around the ESP8266 chip such as the Adafruit Feather Huzzah. As an alternative see https://github.com/yy502/ePaperDisplay if you are running this on a full CPython implementation, as that library has many more functions.
+This is a simple library for displaying information on a Waveshare 4.3 e-ink display from a device running Micropython. These are boards like the Pyboard, WiPy, or those based around the ESP8266 chip such as the Adafruit Feather Huzzah. As an alternative if you are running this on a full CPython implementation see https://github.com/yy502/ePaperDisplay, as that library has many more functions.
 
 ### Conversion
 It takes as its base a pure conversion from the Waveshare code. I used a few things to start the conversion from C code into Python:
