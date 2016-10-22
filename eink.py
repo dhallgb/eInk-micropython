@@ -60,6 +60,7 @@ EPD_NORMAL      = 0
 EPD_INVERSION   = 1
 
 # pins
+uartnum = 0
 Tx = 'GP12'
 Rx = 'GP13'
 wake_up = 2
@@ -93,7 +94,7 @@ def addparity(packet):
 
 def eink_init():
     global uart
-    uart = UART(0, baudrate=115200, pins=(Tx, Rx))
+    uart = UART(uartnum, baudrate=115200, pins=(Tx, Rx))
 
 def eink_reset():
     pass

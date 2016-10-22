@@ -91,6 +91,8 @@ def draw_bitmap_demo():
     eink_disp_bitmap("PIC7.BMP", 0, 0)
     eink_update()
 
+Tx = 'G12'
+Rx = 'G13'
 eink_init()
 base_draw()
 #  draw_text_demo()
