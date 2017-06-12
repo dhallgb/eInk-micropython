@@ -60,9 +60,9 @@ EPD_NORMAL      = 0
 EPD_INVERSION   = 1
 
 # pins
-uartnum = 0
-Tx = 'GP12'
-Rx = 'GP13'
+uartnum = 1
+Tx = 'G12'
+Rx = 'G13'
 wake_up = 2
 reset = 3
 
@@ -70,8 +70,8 @@ def printhex(s):
     print(type(s),len(s),":".join("{:02x}".format(c) for c in s))
 
 def send(cmd):
-    if __debug__:
-        printhex(cmd)
+#    if __debug__:
+#        printhex(cmd)
     uart.write(cmd)
 
 def addparity(packet):

@@ -93,6 +93,7 @@ def draw_bitmap_demo():
 
 Tx = 'G12'
 Rx = 'G13'
+uartnum = 1
 eink_init()
 base_draw()
 #  draw_text_demo()
