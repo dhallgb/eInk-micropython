@@ -3,6 +3,11 @@
 
 This is a simple library for displaying information on a Waveshare 4.3 e-ink display from a device running Micropython. These are boards like the Pyboard, WiPy, or those based around the ESP8266 chip such as the Adafruit Feather Huzzah. As an alternative if you are running this on a full CPython implementation see https://github.com/yy502/ePaperDisplay, as that library has many more functions.
 
+[![Donate with Open Source Citizen](http://www.opensourcecitizen.org/badge?url=github.com/dhallgb/eInk-micropython)](http://www.opensourcecitizen.org/project?url=github.com/dhallgb/eInk-micropython)
+
+If you found this library useful, donate some CPU cycles to its
+development efforts by clicking above. Thank you! 😇
+
 ### Conversion
 It takes as its base a pure conversion from the Waveshare code. I used a few things to start the conversion from C code into Python:
 
