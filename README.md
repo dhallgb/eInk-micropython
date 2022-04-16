@@ -8,7 +8,7 @@ It takes as its base a pure conversion from the Waveshare code. I used a few thi
 
 - a utility called cpp2python from https://github.com/hlamer/cpp2python
 - a demo script h2py.py in the Python demo/scripts directory to convert the header file
-- seasnake from the excellent BeeWare project at http://pybee.org/, but now abandoned - BeeWare itself is still very alive!
+- seasnake from the excellent BeeWare project at https://github.com/pybee/seasnake, but now abandoned - BeeWare itself is still very alive!
 - ctopy from http://www.catb.org/~esr/ctopy/
 
 ...but mostly just hand-cranked the Python code whilst browsing the C routines.
