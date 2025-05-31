@@ -1,0 +1,7 @@
+{
+  "urls": [
+    ["eink.py", "github:dhallgb/eInk-micropython/eink.py"]
+  ],
+  "version": "1.0.0",
+  "deps": []
+}
